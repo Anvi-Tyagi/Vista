@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vista  Weather</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Chart.js for hourly temp chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    html, body {
+    height: 100%;
+    margin: 0;
+    }
+
+    body {
+    background-image: url('./images/weatherbg.jpg');
+    background-size: cover;        /* makes it cover the full page */
+    background-position: center;   /* centers the image */
+    background-repeat: no-repeat;  /* no tiling */
+    background-attachment: fixed;  /* keeps it fixed while scrolling (optional) */
+    }
+
+    .page-wrap { max-width: 980px; margin: 24px auto; }
+    .muted { color:#6c757d; }
+    .stat { font-weight: 600; }
+    .smallcaps { font-variant: all-small-caps; letter-spacing: .06em; }
+    #status { min-height: 1.5rem; }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light px-3">
+    <div class="container-fluid">
+      <!-- Left Section: Brand -->
+      <a class="navbar-brand" href="./index.html">
+        <img src="./images/logo.png" alt="" width="40px">
+      </a>
+
+      <!-- Center Section: Navbar links -->
+      <div class="collapse navbar-collapse justify-content-center" id="navbarTogglerDemo01">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="./Energy.html" style="color: white;">Select AOI</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="./Discover.html" style="color: white;">Analysis</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="./waether.html" style="color: white;">Weather</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Section: Search form -->
+      <div class="d-flex gap-2 icon_div">
+        <i class="fa-solid fa-question"></i>
+        <i class="fa-solid fa-globe"></i>
+        <i class="fa-solid fa-user"></i>
+      </div>
+
+      <!-- Navbar Toggler for small screens -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
+        aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <div class="page-wrap">
+    <h1 class="mb-3" style="color: white; align-content: center;">Weather</h1>
+    <p class="text-muted" style="color: white;">Check live conditions by city, your current location, or an AOI link.</p>
+
+    <!-- Search/Input Row -->
+    <div class="row g-2 align-items-center mb-3">
+      <div class="col-md-7">
+        <input id="cityInput" type="text" class="form-control" placeholder="Enter city (e.g., New Delhi)" />
+      </div>
+      <div class="col-md-3 d-grid d-md-block">
+        <button id="searchBtn" class="btn btn-primary w-100">Search</button>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button id="geoBtn" class="btn btn-outline-secondary">Use my location</button>
+      </div>
+    </div>
+
+    <div id="status" class="muted"></div>
+
+    <!-- Current conditions -->
+    <div id="currentCard" class="card mt-3 d-none">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h5 id="placeName" class="card-title mb-1">—</h5>
+            <div class="smallcaps muted" id="coords">—</div>
+          </div>
+          <div>
+            <div class="display-6" id="tempNow">—</div>
+            <div class="muted" id="condNow">—</div>
+          </div>
+        </div>
+        <hr />
+        <div class="row text-center">
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Feels like</div>
+            <div class="stat" id="feelsLike">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Humidity</div>
+            <div class="stat" id="humidity">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Precip</div>
+            <div class="stat" id="precip">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Wind</div>
+            <div class="stat"><span id="wind">—</span> <span class="muted" id="windDir"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hourly chart -->
+    <div id="hourlyCard" class="card mt-3 d-none">
+      <div class="card-body">
+        <h5 class="card-title">Next 24 hours</h5>
+        <div style="height:180px;">
+            <canvas id="hourlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today summary -->
+    <div id="dailyCard" class="card mt-3 d-none">
+      <div class="card-body">
+        <h5 class="card-title">Today</h5>
+        <div class="row text-center">
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Max</div>
+            <div class="stat" id="tmax">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Min</div>
+            <div class="stat" id="tmin">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Sunrise</div>
+            <div class="stat" id="sunrise">—</div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="muted smallcaps">Sunset</div>
+            <div class="stat" id="sunset">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script>
+    // --- Helpers ---
+    const $ = (id) => document.getElementById(id);
+    const qs = (s, el=document) => el.querySelector(s);
+
+    function setStatus(msg) { $("status").textContent = msg || ""; }
+    function show(el, on=true) { el.classList.toggle("d-none", !on); }
+
+    // Map Open-Meteo weather codes to human text
+    const WMO = {
+      0:"Clear sky", 1:"Mainly clear", 2:"Partly cloudy", 3:"Overcast",
+      45:"Fog", 48:"Depositing rime fog",
+      51:"Light drizzle", 53:"Moderate drizzle", 55:"Dense drizzle",
+      56:"Freezing drizzle", 57:"Freezing drizzle (dense)",
+      61:"Slight rain", 63:"Moderate rain", 65:"Heavy rain",
+      66:"Freezing rain (light)", 67:"Freezing rain (heavy)",
+      71:"Slight snow fall", 73:"Moderate snow fall", 75:"Heavy snow fall",
+      77:"Snow grains",
+      80:"Slight rain showers", 81:"Moderate rain showers", 82:"Violent rain showers",
+      85:"Slight snow showers", 86:"Heavy snow showers",
+      95:"Thunderstorm", 96:"Thunderstorm (slight hail)", 99:"Thunderstorm (heavy hail)"
+    };
+
+    function degToCompass(deg){
+      const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+      return dirs[Math.round(deg/22.5) % 16];
+    }
+
+    // --- Geocoding (Open-Meteo) ---
+    async function geocodeCity(name){
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=en&format=json`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Geocoding failed");
+      const data = await res.json();
+      if (!data.results || !data.results.length) throw new Error("No matching place found");
+      const r = data.results[0];
+      return { lat: r.latitude, lon: r.longitude, label: `${r.name}, ${r.admin1 ?? r.country}` };
+    }
+
+    // --- Weather fetch (Open-Meteo) ---
+    async function fetchWeather(lat, lon){
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,` +
+        `wind_speed_10m,wind_direction_10m&hourly=temperature_2m,precipitation_probability,precipitation` +
+        `&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Weather fetch failed");
+      return res.json();
+    }
+
+    // --- Renderers ---
+    let chart; // Chart.js instance
+
+    function renderCurrent(placeLabel, lat, lon, current){
+      $("placeName").textContent = placeLabel ?? "Selected location";
+      $("coords").textContent = `Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)}`;
+
+      const wcode = current.weather_code;
+      $("tempNow").textContent = `${Math.round(current.temperature_2m)}°C`;
+      $("condNow").textContent = WMO[wcode] ?? `Code ${wcode}`;
+      $("feelsLike").textContent = `${Math.round(current.apparent_temperature)}°C`;
+      $("humidity").textContent = `${current.relative_humidity_2m}%`;
+      $("precip").textContent = `${(current.precipitation ?? 0).toFixed(1)} mm`;
+      $("wind").textContent = `${Math.round(current.wind_speed_10m)} km/h`;
+      $("windDir").textContent = degToCompass(current.wind_direction_10m);
+
+      show($("currentCard"), true);
+    }
+
+    function renderDaily(daily){
+      const tmax = daily.temperature_2m_max?.[0];
+      const tmin = daily.temperature_2m_min?.[0];
+      const sr = daily.sunrise?.[0];
+      const ss = daily.sunset?.[0];
+      $("tmax").textContent = tmax != null ? `${Math.round(tmax)}°C` : "—";
+      $("tmin").textContent = tmin != null ? `${Math.round(tmin)}°C` : "—";
+      $("sunrise").textContent = sr ? new Date(sr).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "—";
+      $("sunset").textContent = ss ? new Date(ss).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "—";
+      show($("dailyCard"), true);
+    }
+
+    function renderHourly(hourly) {
+    // Take next 24 points from "now"
+    const now = Date.now();
+    const times = hourly.time.map(t => new Date(t));
+    const idx = times.findIndex(t => t.getTime() >= now);
+    const start = idx >= 0 ? idx : 0;
+    const end = Math.min(start + 24, times.length);
+
+    const labels = times.slice(start, end).map(t => 
+        t.toLocaleTimeString([], { hour: '2-digit' })
+    );
+    const temps = hourly.temperature_2m.slice(start, end);
+
+    const ctx = $("hourlyChart").getContext("2d");
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+        labels,
+        datasets: [{
+            label: "Temp (°C)",
+            data: temps,
+            tension: 0.3,
+            pointRadius: 2
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false, // ✅ allow container height control
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+            ticks: { callback: v => `${v}°` }
+            }
+        }
+        }
+    });
+
+    show($("hourlyCard"), true);
+    }
+
+
+    async function run(lat, lon, label){
+      try{
+        setStatus("Loading weather…");
+        const data = await fetchWeather(lat, lon);
+        renderCurrent(label, lat, lon, data.current);
+        renderDaily(data.daily);
+        renderHourly(data.hourly);
+        setStatus("");
+      } catch (err){
+        console.error(err);
+        setStatus("Could not load weather. Try another location.");
+      }
+    }
+
+    // --- Events ---
+    $("searchBtn").addEventListener("click", async () => {
+      const name = $("cityInput").value.trim();
+      if (!name) return setStatus("Enter a city to search.");
+      try{
+        setStatus("Searching city…");
+        const { lat, lon, label } = await geocodeCity(name);
+        await run(lat, lon, label);
+      } catch (e){
+        setStatus(e.message || "City not found.");
+      }
+    });
+
+    $("cityInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") $("searchBtn").click();
+    });
+
+    $("geoBtn").addEventListener("click", () => {
+      if (!navigator.geolocation) return setStatus("Geolocation not supported.");
+      setStatus("Getting your location…");
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          await run(lat, lon, "My Location");
+        },
+        (err) => setStatus("Permission denied or unavailable.")
+      );
+    });
+
+    // If arrived with ?lat=..&lon=..
+    (function initFromQuery(){
+      const p = new URLSearchParams(location.search);
+      const lat = parseFloat(p.get("lat"));
+      const lon = parseFloat(p.get("lon"));
+      if (!isNaN(lat) && !isNaN(lon)){
+        run(lat, lon, "Selected location");
+      }
+    })();
+  </script>
+
+  <!-- Bootstrap JS (optional for dropdowns etc.) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

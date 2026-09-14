@@ -1,0 +1,9 @@
+Farmer Report - Region: Assam
+Generated: 15-Sep-2025 13:38:27
+------------------------------------------------------------
+Crop Health (CNN): no image found
+NDVI Trend (LSTM): not enough NDVI dates
+Soil Moisture: no soil_moisture.tif found
+Pest Risk: no_pest (NDVI=NaN, Humidity=68.0%)
+Action: Pest risk low, monitor regularly
+------------------------------------------------------------

@@ -1,0 +1,35 @@
+# Virtual environment
+.venv/
+
+# Large/local datasets
+datasets/
+processed_data/
+raw_data/
+train_data/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/# Datasets
+datasets/
+train_data/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

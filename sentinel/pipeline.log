@@ -1,0 +1,20 @@
+📡 Fetching Sentinel-2 bands...
+✅ Saved B02 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+✅ Saved B03 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+✅ Saved B04 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+✅ Saved B08 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+✅ Saved B11 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+✅ Saved B12 in /Users/adityamehrotra/Desktop/VistaProject/raw_data/Amritsar
+🧮 Running MATLAB pipeline...
+[?1h=
+                                                            < M A T L A B (R) >
+                                                  Copyright 1984-2024 The MathWorks, Inc.
+                                              R2025a Update 1 (25.1.0.2973910) 64-bit (maca64)
+                                                                July 3, 2025
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Undefined function 'run_pipeline' for input arguments of type 'char'.
+[?1l>✅ Done! Check processed_data/Amritsar/ and reports/

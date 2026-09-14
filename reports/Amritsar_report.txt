@@ -1,0 +1,10 @@
+Farmer Report - Region: Amritsar
+Generated: 16-Sep-2025 08:36:57
+------------------------------------------------------------
+Crop Health (CNN): pests (image: /Users/adityamehrotra/Desktop/VistaProject/processed_data/Amritsar/composite.tif)
+NDVI Trend (LSTM): not enough NDVI dates
+Soil Moisture: avg=0.57
+Action: Moisture sufficient, no irrigation now
+Pest Risk: no_pest (NDVI=0.53, Humidity=85.0%)
+Maps generated: water_map.png, pest_map.png, stress_map.png
+------------------------------------------------------------

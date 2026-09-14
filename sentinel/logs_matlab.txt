@@ -1,0 +1,17 @@
+./run_pipeline.sh: line 16: matlab: command not found
+./run_pipeline.sh: line 16: matlab: command not found
+./run_pipeline.sh: line 16: matlab: command not found
+./run_pipeline.sh: line 38: matlab: command not found
+./run_pipeline.sh: line 38: matlab: command not found
+{run_pipeline is not found in the current folder or on the MATLAB path, but
+exists in:
+    /Users/adityamehrotra/Desktop/VistaProject/matlab_scripts
+
+Change the MATLAB current folder or add its folder to the MATLAB path.
+} 
+{run_pipeline is not found in the current folder or on the MATLAB path, but
+exists in:
+    /Users/adityamehrotra/Desktop/VistaProject/matlab_scripts
+
+Change the MATLAB current folder or add its folder to the MATLAB path.
+} 
